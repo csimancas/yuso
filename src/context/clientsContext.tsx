@@ -32,28 +32,15 @@ const getEntries = (dispatch: any) => {
 };
 
 const addEntry = (dispatch: any) => {
-  return async (title: string, content: string, author: string) => {
+  return async (fullName: string, email: string, phone: string, img: any) => {
     const entryObj = {
-      title,
-      content,
-      author,
-      date: new Date().toLocaleDateString(),
+      fullName,
+      email,
+      phone,
+      img,
     };
 
     try {
-      axios
-        .post(CREATE_ENTRY, {
-          title: title,
-          author: author,
-          content: content,
-          date: new Date().toLocaleDateString(),
-        })
-        .then(response => {
-          console.log(response);
-        })
-        .catch(error => {
-          console.log(error);
-        });
       dispatch({type: 'add_entry', payload: entryObj});
     } catch (error) {
       console.log(error);

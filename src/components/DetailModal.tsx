@@ -1,6 +1,8 @@
 import React from 'react';
-import {View, StyleSheet, Modal} from 'react-native';
-import {Avatar, Button, Card, Text} from 'react-native-paper';
+import {View, StyleSheet} from 'react-native';
+import {Avatar, Card} from 'react-native-paper';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Header from './Header';
 
 interface ContentType {
   item: {
@@ -9,29 +11,38 @@ interface ContentType {
     email: string;
     phone: string;
   };
-  visible: boolean;
   onClose: () => void;
 }
 
-const DetailModal = ({item, visible, onClose}: ContentType) => {
+const DetailModal = ({item, onClose}: ContentType) => {
+  console.log(item.img);
   return (
-    <Modal
-      animationType="slide"
-      visible={visible}
-      onRequestClose={onClose}
-      transparent={false}>
-      <View style={styles.centeredView}>
-        <Text> Hola modal</Text>
-      </View>
-    </Modal>
+    <>
+      <Header
+        isBack={true}
+        title={'Detalle de cliente'}
+        onBack={() => onClose()}
+      />
+      <SafeAreaProvider style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Avatar.Image size={130} source={{uri: item?.img}} />
+        </View>
+        <Card>
+          <Card.Title title="Card Title" subtitle="Card Subtitle" />
+        </Card>
+      </SafeAreaProvider>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-
+  container: {
     paddingHorizontal: 10,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
   },
   modalView: {
     height: 300,
