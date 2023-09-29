@@ -1,7 +1,7 @@
 import CreateDataContext from './createDataContext';
 import axios from 'axios';
-import {GET_ENTRIES, CREATE_ENTRY} from '../api';
-import {clients} from '../api/index';
+
+import {getJWT} from '../utils';
 
 const reducer = (state: any, action: any) => {
   switch (action.type) {
@@ -21,30 +21,60 @@ const reducer = (state: any, action: any) => {
 
 const getEntries = (dispatch: any) => {
   return async () => {
-    console.log(clients);
-    try {
-      const isLoaded = true;
-      dispatch({type: 'get_entries', payload: clients, isLoaded});
-    } catch (error) {
-      console.log(error);
-    }
+    const jwt = await getJWT();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    };
+    axios
+      .get('https://api.yuso.mx:8443/api/odata/Customer', config)
+      .then(response => {
+        const isLoaded = true;
+        dispatch({type: 'get_entries', payload: response.data, isLoaded});
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 };
 
 const addEntry = (dispatch: any) => {
-  return async (fullName: string, email: string, phone: string, img: any) => {
+  return async (
+    firstName: string,
+    lastName: string,
+    email: string,
+    phone: string,
+    img: any,
+  ) => {
     const entryObj = {
-      fullName,
-      email,
-      phone,
-      img,
+      Photo: img,
+      FirstName: firstName,
+      LastName: lastName,
+      BirthDay: '2021-05-05T00:00:00',
+      Email: email,
+      Phone: phone,
     };
 
-    try {
-      dispatch({type: 'add_entry', payload: entryObj});
-    } catch (error) {
-      console.log(error);
-    }
+    console.log(entryObj);
+    // const jwt = await getJWT();
+    // const config = {
+    //   headers: {
+    //     Authorization: `Bearer ${jwt}`,
+    //   },
+    // };
+    // axios
+    //   .post('https://api.yuso.mx:8443/api/odata/Customer', entryObj, config)
+    //   .then(
+    //     response => {
+    //       console.log(response);
+    //       dispatch({type: 'add_entry', payload: entryObj});
+    //     },
+    //     error => {
+    //       console.log(error);
+    //     },
+    //   );
   };
 };
 

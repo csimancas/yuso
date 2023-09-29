@@ -15,15 +15,28 @@ const ClientForm = ({visible, onClose}: EntryFormProps) => {
   const {addEntry} = useContext(EntriesContext);
   const [selectedImage, setSelectedImage] = React.useState<string | null>();
 
+  type ImagePickerResponse = {
+    didCancel: boolean;
+    error?: string;
+    uri?: string;
+    assets?: Array<{uri: string}>;
+  };
+
   const openImagePicker = () => {
-    const options = {
+    type optionsType = {
+      mediaType: 'photo';
+      includeBase64: boolean;
+      maxHeight: number;
+      maxWidth: number;
+    };
+    const options: optionsType = {
       mediaType: 'photo',
       includeBase64: false,
-      maxHeight: 2000,
-      maxWidth: 2000,
+      maxHeight: 200,
+      maxWidth: 200,
     };
 
-    launchImageLibrary(options, response => {
+    launchImageLibrary(options, (response: ImagePickerResponse) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -52,13 +65,27 @@ const ClientForm = ({visible, onClose}: EntryFormProps) => {
               initialValues={{
                 name: '',
                 lastName: '',
+                birthDay: new Date(),
                 email: '',
                 phone: '',
               }}
               onSubmit={values => {
-                const fullName = `${values.name} ${values.lastName}}`;
-                addEntry(fullName, values.email, values.phone, selectedImage);
-                onClose();
+                // console.log(
+                //   selectedImage,
+                //   values.name,
+                //   values.lastName,
+                //   values.email,
+                //   values.phone,
+                // );
+                addEntry(
+                  selectedImage,
+                  values.name,
+                  values.lastName,
+                  values.birthDay,
+                  values.email,
+                  values.phone,
+                );
+                // onClose();
               }}>
               {({handleChange, handleSubmit, values}) => (
                 <View style={styles.inputsView}>
@@ -71,7 +98,6 @@ const ClientForm = ({visible, onClose}: EntryFormProps) => {
                   <TextInput
                     label="Apeido"
                     style={styles.input}
-                    multiline={true}
                     value={values.lastName}
                     onChangeText={handleChange('lastName')}
                   />
@@ -81,12 +107,14 @@ const ClientForm = ({visible, onClose}: EntryFormProps) => {
                     value={values.email}
                     onChangeText={handleChange('email')}
                   />
+
                   <TextInput
                     style={styles.input}
                     label="Telefono"
                     value={values.phone}
                     onChangeText={handleChange('phone')}
                   />
+
                   {selectedImage && (
                     <Image
                       source={{uri: selectedImage}}
