@@ -1,7 +1,6 @@
 import React from 'react';
 import {Divider, Text} from 'react-native-paper';
 import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import { readAndDecodeImage } from '../utils';
 
 interface contentType {
   data: {
@@ -16,7 +15,7 @@ interface contentType {
 const ContentItem = ({data, action}: contentType) => {
   return (
     <TouchableOpacity onPress={action}>
-      <View key={data.FullName} style={styles.container}>
+      <View style={styles.container}>
         <Image
           source={
             data?.Image
@@ -27,8 +26,15 @@ const ContentItem = ({data, action}: contentType) => {
         />
         <View style={styles.dataContent}>
           <Text style={styles.title}>{data.FullName}</Text>
-          <Text>{data.Email}</Text>
+          <Text>{data.Phone ? data.Phone : 'Sin informacion'}</Text>
         </View>
+
+        <Text
+          style={{
+            marginLeft: 'auto',
+          }}>
+          {data.Email ? data.Email : 'Sin informacion'}
+        </Text>
       </View>
       <Divider style={styles.divider} />
     </TouchableOpacity>
@@ -38,16 +44,18 @@ const ContentItem = ({data, action}: contentType) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    justifyContent: 'flex-start', // 'flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenlyP
     alignItems: 'center',
     marginTop: 10,
   },
   image: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
   },
   dataContent: {
     flexDirection: 'column',
+    justifyContent: 'flex-start',
     marginLeft: 10,
   },
   title: {
@@ -55,7 +63,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   divider: {
-    backgroundColor: '#000',
+    backgroundColor: '#b5b5b5',
     height: 1,
     width: '100%',
     marginTop: 5,

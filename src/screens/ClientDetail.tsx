@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Avatar, Card, Button} from 'react-native-paper';
+import {View, Linking, StyleSheet} from 'react-native';
+import {Avatar, Card, Button, Text, Chip} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {useRoute, useNavigation} from '@react-navigation/native';
 
@@ -23,7 +23,7 @@ const ClientDetail = () => {
       <View style={styles.container}>
         <View style={styles.imageContainer}>
           <Avatar.Image
-            size={130}
+            size={110}
             source={
               item.Image
                 ? {uri: item.Image}
@@ -32,7 +32,22 @@ const ClientDetail = () => {
           />
         </View>
         <Card>
-          <Card.Title title={item.Email} subtitle={item.Phone} />
+          <Card.Content>
+            <View>
+              <Text style={styles.title}>{item.FullName}</Text>
+            </View>
+            <View style={styles.chipContainer}>
+              <Chip icon="email" style={styles.chip}>
+                {item.Email ? item.Email : 'Sin informacion'}
+              </Chip>
+              <Chip
+                icon="phone"
+                style={styles.chip}
+                onPress={() => Linking.openURL(`tel:${item.Phone}`)}>
+                {item.Phone ? item.Phone : 'Sin informacion'}
+              </Chip>
+            </View>
+          </Card.Content>
         </Card>
         <Card.Actions>
           <Button
@@ -56,6 +71,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 10,
   },
+  chipContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  chip: {
+    marginVertical: 5,
+  },
+
   modalView: {
     height: 300,
     width: '100%',
@@ -67,6 +90,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 
