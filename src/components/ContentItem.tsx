@@ -1,13 +1,14 @@
 import React from 'react';
 import {Divider, Text} from 'react-native-paper';
 import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import { readAndDecodeImage } from '../utils';
 
 interface contentType {
   data: {
-    img: string;
-    fullName: string;
-    email: string;
-    phone: string;
+    Image: string;
+    FullName: string;
+    Email: string;
+    Phone: string;
   };
   action: () => void;
 }
@@ -15,11 +16,18 @@ interface contentType {
 const ContentItem = ({data, action}: contentType) => {
   return (
     <TouchableOpacity onPress={action}>
-      <View key={data.fullName} style={styles.container}>
-        <Image source={{uri: data.img}} style={styles.image} />
+      <View key={data.FullName} style={styles.container}>
+        <Image
+          source={
+            data?.Image
+              ? {uri: data.Image}
+              : require('../assets/noUserImage.png')
+          }
+          style={styles.image}
+        />
         <View style={styles.dataContent}>
-          <Text style={styles.title}>{data.fullName}</Text>
-          <Text>{data.email}</Text>
+          <Text style={styles.title}>{data.FullName}</Text>
+          <Text>{data.Email}</Text>
         </View>
       </View>
       <Divider style={styles.divider} />

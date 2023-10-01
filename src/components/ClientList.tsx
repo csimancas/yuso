@@ -3,13 +3,12 @@ import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 
 import useClientList from '../hooks/useClientList';
 
+import {useNavigation} from '@react-navigation/native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import ClientForm from './ClientForm';
+import ContentItem from './ContentItem';
 import FloatingButton from './FloatingButton';
 import SearchBar from './SearchBar';
-import ContentItem from './ContentItem';
-import Header from './Header';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
 
 const ClientList = () => {
   const {data, searchText, searchItem} = useClientList();
@@ -20,7 +19,6 @@ const ClientList = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <Header isBack={false} title={'Listado de clientes'} />
         <SearchBar
           searchQuery={searchText}
           onChangeSearch={text => searchItem(text)}
@@ -32,7 +30,6 @@ const ClientList = () => {
         <FlatList
           data={data}
           renderItem={({item}) => {
-            console.log(item);
             return (
               <ContentItem
                 data={item}
@@ -42,7 +39,7 @@ const ClientList = () => {
               />
             );
           }}
-          keyExtractor={item => item.fullName}
+          keyExtractor={item => item.Oid}
         />
         <FloatingButton action={() => setVisibleEntry(true)} />
       </SafeAreaView>

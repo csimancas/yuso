@@ -1,8 +1,8 @@
 import {Formik} from 'formik';
 import React, {useContext} from 'react';
-import {Image, Modal, ScrollView, StyleSheet, View} from 'react-native';
+import {Alert, Image, Modal, ScrollView, StyleSheet, View} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {Button, Text, TextInput} from 'react-native-paper';
+import {Button, TextInput} from 'react-native-paper';
 import {Context as EntriesContext} from '../context/clientsContext';
 import Header from './Header';
 
@@ -36,7 +36,7 @@ const ClientForm = ({visible, onClose}: EntryFormProps) => {
       maxWidth: 200,
     };
 
-    launchImageLibrary(options, (response: ImagePickerResponse) => {
+    launchImageLibrary(options, (response: any) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -57,9 +57,6 @@ const ClientForm = ({visible, onClose}: EntryFormProps) => {
       />
       <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
         <View style={styles.container}>
-          <Text variant="displaySmall" style={styles.header}>
-            Agregar nuevo cliente
-          </Text>
           <View>
             <Formik
               initialValues={{
@@ -70,22 +67,24 @@ const ClientForm = ({visible, onClose}: EntryFormProps) => {
                 phone: '',
               }}
               onSubmit={values => {
-                // console.log(
-                //   selectedImage,
-                //   values.name,
-                //   values.lastName,
-                //   values.email,
-                //   values.phone,
-                // );
-                addEntry(
-                  selectedImage,
-                  values.name,
-                  values.lastName,
-                  values.birthDay,
-                  values.email,
-                  values.phone,
-                );
-                // onClose();
+                if (
+                  values.name === '' ||
+                  values.lastName === '' ||
+                  values.email === '' ||
+                  values.phone === ''
+                ) {
+                  Alert.alert('Error', 'Todos los campos son requeridos');
+                } else {
+                  addEntry(
+                    selectedImage,
+                    values.name,
+                    values.lastName,
+                    values.birthDay,
+                    values.email,
+                    values.phone,
+                  );
+                  onClose();
+                }
               }}>
               {({handleChange, handleSubmit, values}) => (
                 <View style={styles.inputsView}>
@@ -116,10 +115,7 @@ const ClientForm = ({visible, onClose}: EntryFormProps) => {
                   />
 
                   {selectedImage && (
-                    <Image
-                      source={{uri: selectedImage}}
-                      style={{width: 100, height: 100, borderRadius: 15}}
-                    />
+                    <Image source={{uri: selectedImage}} style={styles.image} />
                   )}
 
                   <View style={styles.buttons}>
@@ -154,6 +150,11 @@ const styles = StyleSheet.create({
   },
   header: {
     textAlign: 'center',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 15,
   },
   input: {
     marginBottom: 10,

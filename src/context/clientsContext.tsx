@@ -1,5 +1,7 @@
-import CreateDataContext from './createDataContext';
 import axios from 'axios';
+import CreateDataContext from './createDataContext';
+import {convertImageToBase64} from '../utils';
+import {Alert} from 'react-native';
 
 import {getJWT} from '../utils';
 
@@ -21,60 +23,69 @@ const reducer = (state: any, action: any) => {
 
 const getEntries = (dispatch: any) => {
   return async () => {
-    const jwt = await getJWT();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-    };
-    axios
-      .get('https://api.yuso.mx:8443/api/odata/Customer', config)
-      .then(response => {
-        const isLoaded = true;
-        dispatch({type: 'get_entries', payload: response.data, isLoaded});
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    await getJWT().then(data => {
+      const parsedData = JSON.parse(data);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${parsedData.token}`,
+        },
+      };
+      axios
+        .get('https://api.yuso.mx:8443/api/odata/Customer', config)
+        .then(response => {
+          const isLoaded = true;
+          dispatch({
+            type: 'get_entries',
+            payload: response.data.value,
+            isLoaded,
+          });
+        })
+        .catch(error => {
+          console.log(error.message);
+        });
+    });
   };
 };
 
 const addEntry = (dispatch: any) => {
   return async (
+    img: any,
     firstName: string,
     lastName: string,
+    birthDay: Date,
     email: string,
     phone: string,
-    img: any,
   ) => {
-    const entryObj = {
-      Photo: img,
-      FirstName: firstName,
-      LastName: lastName,
-      BirthDay: '2021-05-05T00:00:00',
-      Email: email,
-      Phone: phone,
+    const jwt = await getJWT();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
     };
-
-    console.log(entryObj);
-    // const jwt = await getJWT();
-    // const config = {
-    //   headers: {
-    //     Authorization: `Bearer ${jwt}`,
-    //   },
-    // };
-    // axios
-    //   .post('https://api.yuso.mx:8443/api/odata/Customer', entryObj, config)
-    //   .then(
-    //     response => {
-    //       console.log(response);
-    //       dispatch({type: 'add_entry', payload: entryObj});
-    //     },
-    //     error => {
-    //       console.log(error);
-    //     },
-    //   );
+    convertImageToBase64(img).then(response => {
+      axios
+        .post(
+          'https://api.yuso.mx:8443/api/odata/Customer',
+          {
+            Photo: response ? response : null,
+            Birthday: '2023-09-29T17:28:36.793-06:00',
+            FirstName: firstName,
+            LastName: lastName,
+            MiddleName: '',
+            Email: email,
+            Phone: phone,
+          },
+          config,
+        )
+        .then(
+          res => {
+            dispatch({type: 'add_entry', payload: res.data});
+          },
+          error => {
+            console.log(error.message);
+          },
+        );
+    });
   };
 };
 

@@ -6,10 +6,10 @@ import {useRoute, useNavigation} from '@react-navigation/native';
 
 interface ContentType {
   item: {
-    img: string;
-    fullName: string;
-    email: string;
-    phone: string;
+    Image: string;
+    FullName: string;
+    Email: string;
+    Phone: string;
   };
 }
 
@@ -22,10 +22,17 @@ const ClientDetail = () => {
     <SafeAreaProvider style={styles.container}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Avatar.Image size={130} source={{uri: item.img}} />
+          <Avatar.Image
+            size={130}
+            source={
+              item.Image
+                ? {uri: item.Image}
+                : require('../assets/noUserImage.png')
+            }
+          />
         </View>
         <Card>
-          <Card.Title title={item.email} subtitle={item.phone} />
+          <Card.Title title={item.Email} subtitle={item.Phone} />
         </Card>
         <Card.Actions>
           <Button

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {Alert, View, StyleSheet, Image} from 'react-native';
 import {Button, Text, TextInput} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {storeJWT} from '../utils';
@@ -17,11 +17,22 @@ const LogIn = () => {
         password: password,
       })
       .then(response => {
-        navigation.replace('Home');
-        storeJWT(response.data);
+        if (response.status !== 200) {
+          Alert.alert('Error', 'Usuario o contraseña incorrectos');
+        } else {
+          navigation.replace('Home');
+          const obj = {
+            token: response.data,
+            status: response.status,
+          };
+          const jsonValue = JSON.stringify(obj);
+          storeJWT(jsonValue);
+        }
       })
       .catch(error => {
-        console.log(error);
+        if (error.response) {
+          Alert.alert('Error', 'Usuario o contraseña incorrectos');
+        }
       });
   };
 
