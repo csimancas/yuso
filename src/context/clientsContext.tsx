@@ -140,7 +140,6 @@ const editEntry = (dispatch: any) => {
       )
       .then(
         res => {
-          console.log(999999, res.config.data);
           const obj = {
             Phone: phone,
             Email: email,

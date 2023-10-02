@@ -27,7 +27,6 @@ const ClientDetail = () => {
   const {item} = route.params as {item: ContentType['item']};
   const [showForm, setShowForm] = useState(false);
 
-  console.log(item.Oid);
   return (
     <ScrollView>
       <SafeAreaProvider style={styles.container}>
