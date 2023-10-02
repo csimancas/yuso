@@ -19,7 +19,7 @@ const reducer = (state: any, action: any) => {
     case 'edit_entry':
       return {
         ...state,
-        data: state.data.map((item: any) => {
+        data: state.data.map(item => {
           if (item.Oid === action.payload.Oid) {
             return action.payload;
           }
@@ -123,30 +123,43 @@ const editEntry = (dispatch: any) => {
         Authorization: `Bearer ${parsedData.token}`,
       },
     };
-    convertImageToBase64(img).then(response => {
-      axios
-        .put(
-          `https://api.yuso.mx:8443/api/odata/Customer(${Oid})`,
-          {
-            Photo: response ? response : null,
-            Birthday: '2023-09-29T17:28:36.793-06:00',
+
+    await axios
+      .put(
+        `https://api.yuso.mx:8443/api/odata/Customer(${Oid})`,
+        {
+          Photo: img ? img : null,
+          Birthday: '2023-09-29T17:28:36.793-06:00',
+          FirstName: firstName,
+          LastName: lastName,
+          MiddleName: '',
+          Email: email,
+          Phone: phone,
+        },
+        config,
+      )
+      .then(
+        res => {
+          console.log(999999, res.config.data);
+          const obj = {
+            Phone: phone,
+            Email: email,
+            Photo: img,
+
             FirstName: firstName,
             LastName: lastName,
-            MiddleName: '',
-            Email: email,
-            Phone: phone,
-          },
-          config,
-        )
-        .then(
-          res => {
-            dispatch({type: 'edit_entry', payload: res.data});
-          },
-          error => {
-            console.log(error.message);
-          },
-        );
-    });
+            Oid: Oid,
+            FullName: `${firstName} ${lastName}`,
+          };
+          dispatch({
+            type: 'edit_entry',
+            payload: obj,
+          });
+        },
+        error => {
+          console.log(error);
+        },
+      );
   };
 };
 

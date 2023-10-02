@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
+import {Context as ClientsContext} from '../context/clientsContext';
 import {View, Linking, StyleSheet, Alert, ScrollView} from 'react-native';
 import {Avatar, Card, Button, Text, Chip, TextInput} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {useRoute} from '@react-navigation/native';
 import {Formik} from 'formik';
+import {useNavigation} from '@react-navigation/native';
 
 interface ContentType {
   item: {
@@ -19,6 +21,8 @@ interface ContentType {
 }
 
 const ClientDetail = () => {
+  const navigation: any = useNavigation();
+  const {editEntry, deleteEntry} = useContext(ClientsContext);
   const route = useRoute();
   const {item} = route.params as {item: ContentType['item']};
   const [showForm, setShowForm] = useState(false);
@@ -76,8 +80,17 @@ const ClientDetail = () => {
                 email: item.Email,
                 phone: item.Phone,
               }}
-              onSubmit={values => {
-                console.log(values);
+              onSubmit={async values => {
+                await editEntry(
+                  item.Image,
+                  values.name,
+                  values.lastName,
+                  values.birthDay,
+                  values.email,
+                  values.phone,
+                  item.Oid,
+                );
+                navigation.goBack();
               }}>
               {({handleChange, handleSubmit, values}) => (
                 <View style={styles.inputsView}>
