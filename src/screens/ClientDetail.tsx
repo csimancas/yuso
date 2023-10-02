@@ -27,6 +27,7 @@ const ClientDetail = () => {
   const {item} = route.params as {item: ContentType['item']};
   const [showForm, setShowForm] = useState(false);
 
+  console.log(item.Oid);
   return (
     <ScrollView>
       <SafeAreaProvider style={styles.container}>
@@ -64,7 +65,23 @@ const ClientDetail = () => {
             <Button onPress={() => setShowForm(!showForm)}>Editar</Button>
             <Button
               onPress={() =>
-                Alert.alert('¿Estas seguro que desea eliminar al usuario?')
+                Alert.alert(
+                  '',
+                  '¿Estas seguro que desea eliminar al usuario?',
+                  [
+                    {
+                      text: 'Cancelar',
+                      style: 'cancel',
+                    },
+                    {
+                      text: 'Si, eliminar',
+                      onPress: async () => {
+                        await deleteEntry(item.Oid);
+                        navigation.goBack();
+                      },
+                    },
+                  ],
+                )
               }>
               Eliminar
             </Button>

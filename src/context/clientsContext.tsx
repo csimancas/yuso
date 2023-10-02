@@ -1,7 +1,7 @@
 import axios from 'axios';
 import CreateDataContext from './createDataContext';
 import {convertImageToBase64} from '../utils';
-
+import {Alert} from 'react-native';
 import {getJWT} from '../utils';
 
 const reducer = (state: any, action: any) => {
@@ -29,7 +29,7 @@ const reducer = (state: any, action: any) => {
     case 'delete_entry':
       return {
         ...state,
-        data: state.data.filter((item: any) => item.Oid !== action.payload.Oid),
+        data: state.data.filter((item: any) => item.Oid !== action.payload),
       };
 
     default:
@@ -165,6 +165,7 @@ const editEntry = (dispatch: any) => {
 
 const deleteEntry = (dispatch: any) => {
   return async (Oid: string) => {
+    console.log(Oid);
     const jwt = await getJWT();
     const parsedData = JSON.parse(jwt || '{}');
     const config = {
@@ -172,16 +173,24 @@ const deleteEntry = (dispatch: any) => {
         Authorization: `Bearer ${parsedData.token}`,
       },
     };
-    axios
+
+    await axios
       .delete(`https://api.yuso.mx:8443/api/odata/Customer(${Oid})`, config)
       .then(
         () => {
-          dispatch({type: 'delete_entry', payload: Oid});
+          try {
+            dispatch({type: 'delete_entry', payload: Oid});
+          } catch (error) {
+            console.log(error);
+          }
         },
         error => {
           console.log(error.message);
         },
-      );
+      )
+      .finally(() => {
+        Alert.alert('', 'Cliente eliminado de manera exitosa');
+      });
   };
 };
 
