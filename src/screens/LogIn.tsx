@@ -10,8 +10,8 @@ const LogIn = () => {
   const [email, setEmail] = useState('Admin');
   const [password, setPassword] = useState('secreto');
 
-  const tryLoguin = () => {
-    axios
+  const tryLoguin = async () => {
+    await axios
       .post('https://api.yuso.mx:8443/api/Authentication/Authenticate', {
         userName: email,
         password: password,
@@ -20,13 +20,13 @@ const LogIn = () => {
         if (response.status !== 200) {
           Alert.alert('Error', 'Usuario o contraseña incorrectos');
         } else {
-          navigation.replace('Home');
           const obj = {
             token: response.data,
             status: response.status,
           };
           const jsonValue = JSON.stringify(obj);
           storeJWT(jsonValue);
+          navigation.replace('Home');
         }
       })
       .catch(error => {
@@ -40,7 +40,7 @@ const LogIn = () => {
     <View style={styles.container}>
       <View style={styles.styleTitle}>
         <Image
-          source={{uri: 'https://picsum.photos/200/300'}}
+          source={require('../assets/genericLogo.png')}
           style={styles.img}
         />
         <Text variant="displaySmall">YusoApp</Text>

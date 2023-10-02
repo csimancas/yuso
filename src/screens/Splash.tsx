@@ -2,27 +2,13 @@ import React, {useEffect} from 'react';
 import {View, Image, Text, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import {getJWT} from '../utils';
-
 const Splash = () => {
   const navigation: any = useNavigation();
 
   useEffect(() => {
-    const checkToken = async () => {
-      await getJWT().then(data => {
-        const parsedData = JSON.parse(data);
-        if (parsedData.status === 200) {
-          setTimeout(() => {
-            navigation.replace('Home');
-          }, 2000);
-        } else {
-          setTimeout(() => {
-            navigation.navigate('LogIn');
-          }, 2000);
-        }
-      });
-    };
-    checkToken();
+    setTimeout(() => {
+      navigation.navigate('LogIn');
+    }, 2000);
   }, [navigation]);
 
   return (

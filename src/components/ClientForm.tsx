@@ -15,13 +15,6 @@ const ClientForm = ({visible, onClose}: EntryFormProps) => {
   const {addEntry} = useContext(EntriesContext);
   const [selectedImage, setSelectedImage] = React.useState<string | null>();
 
-  type ImagePickerResponse = {
-    didCancel: boolean;
-    error?: string;
-    uri?: string;
-    assets?: Array<{uri: string}>;
-  };
-
   const openImagePicker = () => {
     type optionsType = {
       mediaType: 'photo';
@@ -111,6 +104,7 @@ const ClientForm = ({visible, onClose}: EntryFormProps) => {
                     style={styles.input}
                     label="Telefono"
                     value={values.phone}
+                    maxLength={10}
                     onChangeText={handleChange('phone')}
                   />
 
