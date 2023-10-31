@@ -9,21 +9,35 @@ import {
 
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SearchBar from './SearchBar';
+import Arrow from '../assets/arrow';
 import usePokemonList from '../hooks/usePokemonList';
 import {useNavigation} from '@react-navigation/native';
 
 const PokemonList = () => {
-  const {pokemonlist, searchText, filteredData, searchItem} = usePokemonList();
+  // Obtener los datos del hook usePokemonList
+  const {pokemonlist, searchText, filteredData, searchItem, markPokemonAsSeen} =
+    usePokemonList();
+
   const navigation: any = useNavigation();
+
+  // función para manejar el evento onPress de un item para navegar a la pantalla de detalle y marcar el pokemon como visto
+  const handleItemPress = (item: any) => {
+    markPokemonAsSeen(item);
+    navigation.navigate('ClientDetail', {item});
+  };
 
   const renderItem = ({item}: {item: any}) => {
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('ClientDetail', {item})}
-        style={styles.renderItem}>
-        <Text style={styles.item}>
-          <Text style={styles.title}>{item.name.toUpperCase()}</Text>
-        </Text>
+        onPress={() => handleItemPress(item)}
+        style={[
+          styles.renderItem,
+          {
+            backgroundColor: item.seen ? '#1f722b' : '#3355ff',
+          },
+        ]}>
+        <Text style={styles.title}>{item.name.toUpperCase()}</Text>
+        <Arrow />
       </TouchableOpacity>
     );
   };
@@ -52,22 +66,24 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
-  item: {
-    marginTop: 10,
-  },
   title: {
     fontWeight: 'bold',
+    fontSize: 16,
+    color: 'white',
   },
   flatList: {
     marginTop: 10,
   },
   renderItem: {
-    backgroundColor: '#f1f1f1',
-    paddingBottom: 10,
-    marginBottom: 10,
+    height: 80,
     borderRadius: 10,
+    // justifyContent: 'center',
+    justifyContent: 'space-between',
+    paddingRight: 10,
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingLeft: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
   },
 });
 

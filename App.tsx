@@ -3,6 +3,7 @@ import Navigation from './src/navigation';
 
 import {DefaultTheme, Provider} from 'react-native-paper';
 
+// default theme for app
 const theme = {
   ...DefaultTheme,
   colors: {
