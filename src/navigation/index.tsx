@@ -2,9 +2,9 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Splash from '../screens/Splash';
-import LogIn from '../screens/LogIn';
+
 import Home from '../screens/Home';
-import ClientDetail from '../screens/ClientDetail';
+import PokemonDetail from '../screens/PokemonDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,24 +20,17 @@ const Navigation = () => {
           component={Splash}
         />
         <Stack.Screen
-          options={{
-            headerShown: false,
-          }}
-          name="LogIn"
-          component={LogIn}
-        />
-        <Stack.Screen
           name="Home"
           component={Home}
           options={{
-            title: 'Clientes',
+            headerShown: false,
           }}
         />
         <Stack.Screen
           name="ClientDetail"
-          component={ClientDetail}
+          component={PokemonDetail}
           options={{
-            title: 'Detalle del cliente',
+            headerShown: false,
           }}
         />
       </Stack.Navigator>

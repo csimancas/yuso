@@ -1,6 +1,5 @@
-import axios from 'axios';
 import CreateDataContext from './createDataContext';
-import {convertImageToBase64} from '../utils';
+import axios from 'axios';
 import {Alert} from 'react-native';
 import {getJWT} from '../utils';
 
@@ -39,27 +38,20 @@ const reducer = (state: any, action: any) => {
 
 const getEntries = (dispatch: any) => {
   return async () => {
-    await getJWT().then((data: string | null | undefined): void => {
-      const parsedData = JSON.parse(data || '{}');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${parsedData.token}`,
-        },
-      };
-      axios
-        .get('https://api.yuso.mx:8443/api/odata/Customer', config)
-        .then(response => {
-          const isLoaded = true;
-          dispatch({
-            type: 'get_entries',
-            payload: response.data.value,
-            isLoaded,
-          });
-        })
-        .catch(error => {
-          console.log(error.message);
-        });
-    });
+    axios
+      .get('pokemon?limit=100&offset=0')
+      .then(response => {
+        const isLoaded = true;
+        console.log(response);
+        // dispatch({
+        //   type: 'get_entries',
+        //   payload: response.data.results,
+        //   isLoaded,
+        // });
+      })
+      .catch(error => {
+        console.log(error.message);
+      });
   };
 };
 
@@ -162,44 +154,12 @@ const editEntry = (dispatch: any) => {
   };
 };
 
-const deleteEntry = (dispatch: any) => {
-  return async (Oid: string) => {
-    console.log(Oid);
-    const jwt = await getJWT();
-    const parsedData = JSON.parse(jwt || '{}');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${parsedData.token}`,
-      },
-    };
-
-    await axios
-      .delete(`https://api.yuso.mx:8443/api/odata/Customer(${Oid})`, config)
-      .then(
-        () => {
-          try {
-            dispatch({type: 'delete_entry', payload: Oid});
-          } catch (error) {
-            console.log(error);
-          }
-        },
-        error => {
-          console.log(error.message);
-        },
-      )
-      .finally(() => {
-        Alert.alert('', 'Cliente eliminado de manera exitosa');
-      });
-  };
-};
-
 export const {Context, Provider} = CreateDataContext(
   reducer,
   {
     getEntries,
     addEntry,
     editEntry,
-    deleteEntry,
   },
   {
     data: [],

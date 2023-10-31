@@ -1,11 +1,11 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import ClientList from '../components/ClientList';
+import PokemonList from '../components/PokemonList';
 
 const Home = () => {
   return (
     <View style={styles.container}>
-      <ClientList />
+      <PokemonList />
     </View>
   );
 };
