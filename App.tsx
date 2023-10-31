@@ -1,6 +1,6 @@
 import React from 'react';
 import Navigation from './src/navigation';
-import {Provider as EntriesContext} from './src/context/clientsContext';
+
 import {DefaultTheme, Provider} from 'react-native-paper';
 
 const theme = {
@@ -14,9 +14,7 @@ const theme = {
 function App(): JSX.Element {
   return (
     <Provider theme={theme}>
-      <EntriesContext>
-        <Navigation />
-      </EntriesContext>
+      <Navigation />
     </Provider>
   );
 }

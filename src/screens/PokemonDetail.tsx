@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {View, ScrollView, StyleSheet, Image} from 'react-native';
 import {useRoute} from '@react-navigation/native';
-import {Card, Text} from 'react-native-paper';
+import {Card, Text, ActivityIndicator} from 'react-native-paper';
 
 interface PokemonAbility {
   ability: {
@@ -38,41 +38,42 @@ const PokemonDetail: React.FC = () => {
   }, [item.url]);
 
   return loading ? (
-    <Text>Loading...</Text>
+    <View style={styles.container}>
+      <ActivityIndicator animating={true} color="#000" />
+    </View>
   ) : (
     <ScrollView style={styles.container}>
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View style={styles.imgContainer}>
         <Image
-          style={{width: 200, height: 200}}
+          style={styles.image}
           source={{uri: data.sprites.front_default}}
         />
       </View>
-      <Card>
-        <Card.Title title={data.name} />
+      <Card style={styles.cardStyle}>
+        <Card.Title title={`Nombre: ${data.name.toUpperCase()}`} />
         <Card.Content>
-          <Text>Height: {data.height}</Text>
-          <Text>Weight: {data.weight}</Text>
+          <Text>Altura: {data.height}</Text>
+          <Text>Peso: {data.weight}</Text>
         </Card.Content>
       </Card>
-      <Card>
-        <Card.Title title={data.name} />
+      <Card style={styles.cardStyle}>
+        <Card.Title title="Habilidades" />
         <Card.Content>
-          {data.abilities.map((item: PokemonAbility) => (
-            <Text key={item.ability.name}>{item.ability.name}</Text>
+          {data.abilities.map((ability: PokemonAbility) => (
+            <Text key={ability.ability.name}>{ability.ability.name}</Text>
           ))}
         </Card.Content>
       </Card>
-      <Card>
-        <Card.Title title={data.name} />
+      <Card style={styles.cardStyle}>
+        <Card.Title title="Movimientos disponibles" />
         <Card.Content>
-          {data.moves.map((item: PokemonMove) => (
-            <Text key={item.move.name}>{item.move.name}</Text>
-          ))}
+          <View style={styles.movesContainer}>
+            {data.moves.map((moves: PokemonMove) => (
+              <View key={moves.move.name} style={styles.moveItem}>
+                <Text>{moves.move.name}</Text>
+              </View>
+            ))}
+          </View>
         </Card.Content>
       </Card>
     </ScrollView>
@@ -83,6 +84,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+  },
+  movesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  moveItem: {
+    width: '50%',
+    padding: 5,
+  },
+  cardStyle: {
+    marginBottom: 10,
+  },
+  imgContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    width: 200,
+    height: 200,
   },
 });
 

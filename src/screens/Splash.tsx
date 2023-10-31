@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Image, Text, StyleSheet} from 'react-native';
+import {View, Image, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 const Splash = () => {
@@ -17,7 +17,6 @@ const Splash = () => {
         source={require('../assets/genericLogo.png')}
         style={styles.image}
       />
-      <Text style={styles.text}>YusoApp</Text>
     </View>
   );
 };
@@ -30,13 +29,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: 200,
+    width: '100%',
     height: 200,
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
   },
 });
 

@@ -30,7 +30,7 @@ const Navigation = () => {
           name="ClientDetail"
           component={PokemonDetail}
           options={{
-            headerShown: false,
+            title: 'Detalle de Pokemon',
           }}
         />
       </Stack.Navigator>
